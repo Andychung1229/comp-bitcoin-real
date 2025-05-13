@@ -62,7 +62,7 @@ Since this project requires a local development server for proper functionality,
    npm start
    ```
 
-4. Open [http://localhost:8080](http://localhost:8080) in your browser.
+4. Open [http://localhost:7777](http://localhost:7777) in your browser.
 
 ### Accessing the DApp
 
