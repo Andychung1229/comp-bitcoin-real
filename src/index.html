@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Lottery</title>
+    <!-- No need for ethers.js script tag or external CSS link here -->
+    <!-- Webpack will inject the bundled JS and CSS -->
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quantum Lottery</h1>
+            <p>Decentralized lottery on the blockchain</p>
+            <div id="wallet-connection">
+                <button id="connect-wallet" class="connect-wallet">Connect Wallet</button>
+                <div id="account-display" class="hide">
+                    <div id="account-info" class="account-info"></div>
+                    <button id="logout-button" class="connect-wallet" style="margin-left: 10px; background: var(--danger);">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <div id="app-content" class="hide">
+            <div class="info-container">
+                <div class="info-box">
+                    <h3>Lottery Status</h3>
+                    <div id="lottery-status" class="info-value">Loading...</div>
+                </div>
+                <div class="info-box">
+                    <h3>Ticket Price</h3>
+                    <div id="ticket-price" class="info-value">Loading...</div>
+                </div>
+                <div class="info-box">
+                    <h3>Prize Pool</h3>
+                    <div id="prize-pool" class="info-value">Loading...</div>
+                </div>
+                <div class="info-box">
+                    <h3>Tickets Sold</h3>
+                    <div id="tickets-sold" class="info-value">Loading...</div>
+                </div>
+            </div>
+
+            <div class="action-container">
+                <div class="action-box">
+                    <h3>Buy a Lottery Ticket</h3>
+                    <p>Purchase a ticket to enter the current lottery round. Each ticket costs <span id="ticket-price-action">0.005</span> ETH.</p>
+                    <button id="buy-ticket" class="btn">
+                        <span class="loader" id="buy-loader"></span>
+                        Buy Ticket
+                    </button>
+                </div>
+
+                <div class="action-box" id="manager-actions">
+                    <h3>Manager Actions</h3>
+                    <p>Only the lottery manager can perform these actions.</p>
+                    <button id="draw-winner" class="btn btn-secondary">
+                        <span class="loader" id="draw-loader"></span>
+                        Draw Winner
+                    </button>
+                    <button id="force-close" class="btn btn-danger" style="margin-top: 10px;">
+                        <span class="loader" id="close-loader"></span>
+                        Force Close Lottery
+                    </button>
+                </div>
+            </div>
+
+            <div class="participants-container">
+                <h3>Current Participants (<span id="participant-count">0</span>)</h3>
+                <div id="participants-list" class="participant-list">
+                    <div class="participant-item">No participants yet</div>
+                </div>
+            </div>
+
+            <div class="history-container">
+                <h3>Lottery History</h3>
+                <select id="lottery-select" class="lottery-select">
+                    <option value="">Select a past lottery</option>
+                </select>
+                <div id="lottery-history" class="lottery-history hide">
+                    <p><strong>Winner:</strong> <span id="history-winner"></span></p>
+                    <p><strong>Prize:</strong> <span id="history-prize"></span> ETH</p>
+                    <p><strong>Time:</strong> <span id="history-time"></span></p>
+                    <h4>Participants:</h4>
+                    <div id="history-participants" class="participant-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <span id="notification-message">Notification message</span>
+    </div>
+
+    <!-- No script tag needed here - Webpack will inject the bundled JS -->
+</body>
+</html>
