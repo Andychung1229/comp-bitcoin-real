@@ -22,11 +22,30 @@
         </header>
 
         <div id="app-content" class="hide">
+            <div class="countdown-container">
+                <h3>Time Remaining</h3>
+                <div id="countdown-display" class="countdown">Loading...</div>
+            </div>
+
+            <div id="public-draw-container" class="draw-container hide">
+                <p class="draw-message" id="draw-action-message">Lottery time has ended! Click to draw the winner:</p>
+                        
+                <!-- Draw Winner Button (shown when participants exist) -->
+                <button id="public-draw-button" class="btn btn-highlight hide">
+                    <span class="loader" id="public-draw-loader"></span>
+                    Draw Winner Now
+                </button>
+                
+                <!-- Initialize New Round Button (shown when no participants) -->
+                <button id="initialize-round-button" class="btn btn-primary hide">
+                    <span class="loader" id="initialize-round-loader"></span>
+                    Start New Lottery Round
+                </button>
+                
+                <p class="draw-note" id="draw-action-note">Note: This will require a small gas fee to process the transaction.</p>
+            </div>
+
             <div class="info-container">
-                <div class="info-box">
-                    <h3>Lottery Status</h3>
-                    <div id="lottery-status" class="info-value">Loading...</div>
-                </div>
                 <div class="info-box">
                     <h3>Ticket Price</h3>
                     <div id="ticket-price" class="info-value">Loading...</div>
@@ -44,7 +63,7 @@
             <div class="action-container">
                 <div class="action-box">
                     <h3>Buy a Lottery Ticket</h3>
-                    <p>Purchase a ticket to enter the current lottery round. Each ticket costs <span id="ticket-price-action">0.005</span> ETH.</p>
+                    <p>Purchase a ticket to enter the current lottery round. Each ticket costs <span id="ticket-price-action">0.0001</span> ETH.</p>
                     <button id="buy-ticket" class="btn">
                         <span class="loader" id="buy-loader"></span>
                         Buy Ticket
