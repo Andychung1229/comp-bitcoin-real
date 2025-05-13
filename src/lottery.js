@@ -318,7 +318,8 @@ const contractABI = [
 ];
 
 // Contract address - this is where our smart contract is deployed on the blockchain
-const contractAddress = "0xCeC3234207773E7bF14Dfb555bc0a61562f0be3f";
+// const contractAddress = "0xCeC3234207773E7bF14Dfb555bc0a61562f0be3f";
+const contractAddress = "0x958F61A81Be266376a4658f5574F41f0c6C36407"; // Rinkeby testnet address
 
 // Global variables
 let lotteryContract;
