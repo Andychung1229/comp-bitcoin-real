@@ -10,9 +10,9 @@ The Quantum Lottery is a decentralized application that runs entirely on the Eth
 
 ## Contract Address
 
-The smart contract is deployed on Sepolia Testnet at: `0x958F61A81Be266376a4658f5574F41f0c6C36407`
+The smart contract is deployed on Sepolia Testnet at: `0x2199C9d2657c4Cc7810FC3a37F5522225555fCE4`
 
-You can view it on [Sepolia Etherscan](https://sepolia.etherscan.io/address/0x958F61A81Be266376a4658f5574F41f0c6C36407)
+You can view it on [Sepolia Etherscan](https://sepolia.etherscan.io/address/0x2199C9d2657c4Cc7810FC3a37F5522225555fCE4)
 
 ## Features
 
@@ -76,7 +76,7 @@ Once the development server is running:
 
 ## Smart Contract Details
 
-The smart contract (`lot2.sol`) is the backbone of this application, handling all lottery logic on the Ethereum blockchain.
+The smart contract (`final.sol`) is the backbone of this application, handling all lottery logic on the Ethereum blockchain.
 
 ### Key Contract Parameters
 
@@ -92,7 +92,6 @@ The smart contract (`lot2.sol`) is the backbone of this application, handling al
 | `buyTicket()` | Purchase a lottery ticket | Anyone |
 | `checkAndDraw()` | Check if lottery is complete and draw winner | Anyone |
 | `drawWinner()` | Manually draw a winner | Manager only |
-| `forceClose()` | Force close the current lottery round | Manager only |
 | `getParticipants()` | View current participants | Anyone |
 | `getRemainingTime()` | Check remaining time in lottery | Anyone |
 
@@ -132,7 +131,7 @@ The front-end interface provides a user-friendly way to interact with the smart 
 ```
 quantum-lottery/
 ├── contracts/
-│   └── lot2.sol       # Smart contract source code
+│   └── final.sol       # Smart contract source code
 ├── src/
 │   ├── index.html               # Main HTML file
 │   ├── lottery.js                      # Application logic
