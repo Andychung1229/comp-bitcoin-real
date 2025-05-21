@@ -48,8 +48,7 @@ Since this project requires a local development server for proper functionality,
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/quantum-lottery.git
-   cd quantum-lottery
+   git clone https://github.com/Andychung1229/comp-bitcoin-real.git
    ```
 
 2. Install dependencies:
