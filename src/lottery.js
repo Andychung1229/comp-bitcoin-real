@@ -94,13 +94,6 @@ const contractABI = [
     },
     {
         "inputs": [],
-        "name": "forceClose",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
         "name": "getParticipants",
         "outputs": [
             {
@@ -319,7 +312,8 @@ const contractABI = [
 
 // Contract address - this is where our smart contract is deployed on the blockchain
 // const contractAddress = "0xCeC3234207773E7bF14Dfb555bc0a61562f0be3f";
-const contractAddress = "0x958F61A81Be266376a4658f5574F41f0c6C36407"; 
+// const contractAddress = "0x958F61A81Be266376a4658f5574F41f0c6C36407"; 
+const contractAddress = "0x2199C9d2657c4Cc7810FC3a37F5522225555fCE4"; 
 
 // Global variables
 let lotteryContract;
@@ -344,7 +338,7 @@ const prizePool = document.getElementById('prize-pool');
 const ticketsSold = document.getElementById('tickets-sold');
 const buyTicketBtn = document.getElementById('buy-ticket');
 const drawWinnerBtn = document.getElementById('draw-winner');
-const forceCloseBtn = document.getElementById('force-close');
+// const forceCloseBtn = document.getElementById('force-close');
 const participantCount = document.getElementById('participant-count');
 const participantsList = document.getElementById('participants-list');
 const lotterySelect = document.getElementById('lottery-select');
@@ -507,13 +501,14 @@ async function initializeContract() {
         // Create a provider with the user's web3 provider
         console.log('Initializing contract...');
         const provider = new ethers.BrowserProvider(window.ethereum);
-        
+        console.log('Provider:', provider);
         // Create a signer
         const signer = await provider.getSigner();
         
         // Create contract instance
         lotteryContract = new ethers.Contract(contractAddress, contractABI, signer);
-        
+        console.log('Contract instance created:', lotteryContract);
+
         // Check if current user is the manager
         const managerAddress = await lotteryContract.manager();
         isManager = managerAddress.toLowerCase() === currentAccount.toLowerCase();
@@ -524,7 +519,7 @@ async function initializeContract() {
         // Add event listeners for buttons
         buyTicketBtn.addEventListener('click', buyTicket);
         drawWinnerBtn.addEventListener('click', drawWinner);
-        forceCloseBtn.addEventListener('click', forceClose);
+        // forceCloseBtn.addEventListener('click', forceClose);
         lotterySelect.addEventListener('change', loadLotteryHistory);
         // Add event listener for public draw button
         publicDrawButton.addEventListener('click', publicDrawWinner);
@@ -996,7 +991,7 @@ async function refreshUI() {
         drawWinnerBtn.disabled = remainingTime === 0 || ticketsSoldNum === 0 || !isManager;
         
         // Update force close button
-        forceCloseBtn.disabled = !isManager;
+        // forceCloseBtn.disabled = !isManager;
         
         // Display participants
         updateParticipantsList(participantsArray);
@@ -1101,42 +1096,42 @@ async function drawWinner() {
     }
 }
 
-// Force close the lottery (manager only)
-async function forceClose() {
-    try {
-        closeLoader.classList.add('show-loader');
-        forceCloseBtn.disabled = true;
+// // Force close the lottery (manager only)
+// async function forceClose() {
+//     try {
+//         closeLoader.classList.add('show-loader');
+//         forceCloseBtn.disabled = true;
         
-        // Send transaction to force close
-        const tx = await lotteryContract.forceClose();
+//         // Send transaction to force close
+//         const tx = await lotteryContract.forceClose();
         
-        showNotification('Closing lottery! Waiting for confirmation...', 'warning');
+//         showNotification('Closing lottery! Waiting for confirmation...', 'warning');
         
-        // Wait for transaction to be mined
-        await tx.wait();
+//         // Wait for transaction to be mined
+//         await tx.wait();
         
-        // Transaction confirmed
-        showNotification('Lottery closed successfully!', 'success');
+//         // Transaction confirmed
+//         showNotification('Lottery closed successfully!', 'success');
         
-        // Refresh the UI
-        await refreshUI();
+//         // Refresh the UI
+//         await refreshUI();
         
-    } catch (error) {
-        console.error('Error force closing lottery:', error);
+//     } catch (error) {
+//         console.error('Error force closing lottery:', error);
         
-        if (error.data?.message) {
-            showNotification(`Error: ${error.data.message}`, 'error');
-        } else if (error.message) {
-            showNotification(`Error: ${error.message}`, 'error');
-        } else {
-            showNotification('Error closing lottery. Please try again.', 'error');
-        }
+//         if (error.data?.message) {
+//             showNotification(`Error: ${error.data.message}`, 'error');
+//         } else if (error.message) {
+//             showNotification(`Error: ${error.message}`, 'error');
+//         } else {
+//             showNotification('Error closing lottery. Please try again.', 'error');
+//         }
         
-    } finally {
-        closeLoader.classList.remove('show-loader');
-        forceCloseBtn.disabled = false;
-    }
-}
+//     } finally {
+//         closeLoader.classList.remove('show-loader');
+//         forceCloseBtn.disabled = false;
+//     }
+// }
 
 // Update participants list
 function updateParticipantsList(participants) {
