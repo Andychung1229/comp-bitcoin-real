@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract QuantumLottery {
+// Import OpenZeppelin's ReentrancyGuard
+import {ReentrancyGuard} from "openzeppelin-contracts/utils/ReentrancyGuard.sol";
+
+contract QuantumLottery is ReentrancyGuard {
     address public manager;
     uint public ticketPrice = 0.001 ether; // Reduced price for testing
     uint public constant MAX_TICKETS = 100;
-    uint public constant LOTTERY_DURATION = 5 minutes; // Each lottery lasts 2 minutes
+    uint public constant LOTTERY_DURATION = 5 minutes; // Each lottery lasts 5 minutes
     uint public constant END_THRESHOLD = 10 seconds; // 10-second buying threshold before end
 
     uint public prizePool;
@@ -41,7 +44,7 @@ contract QuantumLottery {
         _startNewLottery();
     }
 
-    function buyTicket() external payable {
+    function buyTicket() external payable nonReentrant {
         // Check if lottery is active based on time
         require(block.timestamp < lotteryEndTime, "Lottery time has expired");
         
@@ -54,6 +57,7 @@ contract QuantumLottery {
         require(msg.value == ticketPrice, "Incorrect value");
         require(!participants[msg.sender], "Already bought");
 
+        // Update state before any external calls (following checks-effects-interactions pattern)
         participants[msg.sender] = true;
         participantList.push(msg.sender);
         prizePool += msg.value;
@@ -69,7 +73,7 @@ contract QuantumLottery {
     }
 
     // Anyone can trigger this function to check and automatically draw if conditions are met
-    function checkAndDraw() external {
+    function checkAndDraw() external nonReentrant {
         // Only allow drawing after the end time
         require(block.timestamp >= lotteryEndTime, "Cannot draw before lottery end time");
         
@@ -83,29 +87,45 @@ contract QuantumLottery {
     }
 
     // Manual draw function (still available for manager)
-    function drawWinner() external onlyManager {
+    function drawWinner() external onlyManager nonReentrant {
         require(ticketsSold > 0, "No participants");
         _drawWinner("Manual draw by manager");
     }
     
     // Internal draw winner function used by both automatic and manual draws
     function _drawWinner(string memory reason) internal {
+        // IMPORTANT: Capture the current state values before making changes
+        // This prevents confusion during state updates
+        uint currentTicketsSold = ticketsSold;
+        address[] memory currentParticipantList = participantList;
+        uint currentPrizePool = prizePool;
+        
         // Improved randomness using multiple block properties
         bytes32 entropy = keccak256(abi.encodePacked(
             block.prevrandao,
             block.timestamp,
             block.coinbase,
-            ticketsSold,
+            currentTicketsSold,
             reason
         ));
 
-        uint index = uint(entropy) % ticketsSold;
-        address winner = participantList[index];
+        uint index = uint(entropy) % currentTicketsSold;
+        address winner = currentParticipantList[index];
 
-        // 95% to winner, 5% to manager
-        uint prize = prizePool * 95 / 100;
-        uint fee = prizePool - prize;
+        // Calculate prizes
+        uint prize = currentPrizePool * 95 / 100;
+        uint fee = currentPrizePool - prize;
 
+        // IMPORTANT: Record result and update state BEFORE external calls
+        _recordResult(winner, prize);
+        
+        // Reset the prize pool since we're distributing it
+        prizePool = 0;
+        
+        // Start a new lottery (with empty prize pool)
+        _startNewLottery();
+        
+        // Now that state is updated, perform external calls
         if (prize > 0) {
             (bool success,) = winner.call{value: prize}("");
             require(success, "Transfer failed");
@@ -116,14 +136,13 @@ contract QuantumLottery {
         }
 
         emit WinnerSelected(winner, prize);
-        _recordResult(winner, prize);
-        _startNewLottery();
+        emit AutomaticDraw(reason);
     }
 
     function _startNewLottery() private {
         lotteryId++;
         ticketsSold = 0;
-        prizePool = 0;
+        // Note: prizePool is not reset here
         lotteryEndTime = block.timestamp + LOTTERY_DURATION;
         
         // Reset participant data
@@ -173,10 +192,5 @@ contract QuantumLottery {
     function isLotteryActive() public view returns (bool) {
         return block.timestamp < lotteryEndTime - END_THRESHOLD && 
                ticketsSold < MAX_TICKETS;
-    }
-
-    // Emergency shutdown pattern
-    function forceClose() external onlyManager {
-        _startNewLottery();
     }
 }
